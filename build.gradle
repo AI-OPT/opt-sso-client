@@ -1,0 +1,92 @@
+apply plugin: 'war'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'maven-publish'
+
+repositories {
+	//mavenLocal()
+	//mavenCentral()
+	//maven{ url "http://223.202.119.155:18081/nexus/content/groups/public/"}
+	maven { url "http://10.1.228.199:18081/nexus/content/groups/public/" }
+}
+ext {
+	appName = "opt-sso-client"
+	moduleVersion = "1.0-SNAPSHOT"
+	builtBy = "gradle 2.4"
+	publishUserName = "runnerdev"
+	publishUserPassword = "runnerdev"
+	publishURL = "http://10.1.228.199:18081/nexus/content/repositories/snapshots/"
+	mavenPublicURL = "http://10.1.228.199:18081/nexus/content/groups/public/"
+}
+sourceCompatibility = 1.7
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+configurations.all { resolutionStrategy.cacheChangingModulesFor 0, 'seconds' }
+
+group="com.ai.opt.sso.client"
+
+dependencies {
+	compile "org.jasig.cas.client:cas-client-core:3.3.3"
+	compile "javax.servlet:javax.servlet-api:3.1.0"
+	compile 'com.ai.opt.sdk:opt-sdk:1.0-SNAPSHOT'
+	//uni session
+	compile 'com.ai.opt.uni.session:opt-uni-session:1.0-SNAPSHOT'
+}
+
+eclipse {
+	wtp {
+		facet {
+			facet name: 'java', version: '1.7'
+			facet name: 'jst.web', version: '3.0'
+			facet name: 'wst.jsdt.web', version: '1.0'
+		}
+	}
+}
+
+jar{
+	baseName appName
+	version moduleVersion
+	include "com/ai/opt/sso/client/filter/**"
+	destinationDir file("$buildDir/libs/")
+	manifest {
+		attributes 'packageName': baseName, 'Built-By': builtBy, 'create-date': new Date().format('yyyy-MM-dd HH:mm:ss')
+	}
+}
+
+publishing {
+    publications {
+        publishing.publications.create("${appName}", MavenPublication) {
+            groupId group
+            artifactId appName
+            version moduleVersion
+            artifact  jar
+            pom.withXml {
+				asNode().children().last() + {
+					delegate.dependencies {
+						delegate.dependency {
+							delegate.groupId("org.jasig.cas.client")
+							delegate.artifactId("cas-client-core")
+							delegate.version("3.3.3")
+						}
+					}
+				}
+
+            }
+        }
+    }
+    repositories {
+        maven {
+            url  publishURL
+            credentials {
+                username = publishUserName
+                password = publishUserPassword
+            }
+        }
+    }
+}
+
+
+
+war{
+	baseName  "sso-client"
+}
