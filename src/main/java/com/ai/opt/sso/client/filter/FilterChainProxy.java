@@ -14,17 +14,18 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.util.AbstractConfigurationFilter;
 import org.jasig.cas.client.util.AssertionThreadLocalFilter;
 import org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
 import org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class FilterChainProxy extends AbstractConfigurationFilter {
 
-	Logger LOG = Logger.getLogger(getClass());
+	Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private Filter[] ssofilters;
 	private  String[] ignore_resources;

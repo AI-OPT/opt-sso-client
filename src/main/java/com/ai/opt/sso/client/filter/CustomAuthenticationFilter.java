@@ -31,7 +31,7 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
 	/**
 	 * 登录类型
 	 */
-	private String loginType;
+	//private String loginType;
 	/**
 	 * 服务端登出url
 	 */
@@ -71,8 +71,8 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
             logger.trace("Loaded renew parameter: {}", this.renew);
             setGateway(parseBoolean(getPropertyFromInitParams(filterConfig, "gateway", "false")));
             logger.trace("Loaded gateway parameter: {}", this.gateway);
-            setLoginType(getPropertyFromInitParams(filterConfig, "loginType", null));
-            logger.trace("Loaded loginType parameter: {}", this.loginType);
+//            setLoginType(getPropertyFromInitParams(filterConfig, "loginType", null));
+//            logger.trace("Loaded loginType parameter: {}", this.loginType);
             setLogOutServerUrl(getPropertyFromInitParams(filterConfig, "logOutServerUrl", null));
             logger.trace("Loaded logOutServerUrl parameter: {}", this.logOutServerUrl);
             setLogOutBackUrl(getPropertyFromInitParams(filterConfig, "logOutBackUrl", null));
@@ -162,7 +162,7 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
         logger.debug("Constructed service url: {}", modifiedServiceUrl);
 
         final String urlToRedirectTo = constructRedirectUrl(this.casServerLoginUrl,
-                getServiceParameterName(), modifiedServiceUrl, this.renew, this.gateway,this.loginType);
+                getServiceParameterName(), modifiedServiceUrl, this.renew, this.gateway);
 
         logger.debug("redirecting to \"{}\"", urlToRedirectTo);
         this.authenticationRedirectStrategy.redirect(request, response, urlToRedirectTo);
@@ -170,35 +170,14 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
 
 	protected String constructRedirectUrl(String casLoginUrl,
 			String serviceParameterName, String serviceUrl, boolean isrenew,
-			boolean isgateway, String logintype) {
+			boolean isgateway) {
 		StringBuffer buffer = new StringBuffer();
-		//用户登录需验证租户ID是否存在
-		if("U".equalsIgnoreCase(logintype)){
-			if(!serviceUrl.contains("tenantId")){
-				buffer.append(this.logOutServerUrl)
-				.append((this.logOutServerUrl.contains("?")) ? "&" : "?")
-				.append(serviceParameterName).append("=")
-				.append(CommonUtils.urlEncode(this.logOutBackUrl));
-			}else{
-				buffer.append(casLoginUrl)
-				.append((casLoginUrl.contains("?")) ? "&" : "?")
-				.append("type=").append(logintype).append("&")
-				.append(serviceParameterName).append("=")
-				.append(CommonUtils.urlEncode(serviceUrl))
-				.append((isrenew) ? "&renew=true" : "")
-				.append((isgateway) ? "&gateway=true" : "");
-			}			
-		}
-		//员工登录不校验租户ID
-		else{
-			buffer.append(casLoginUrl)
-			.append((casLoginUrl.contains("?")) ? "&" : "?")
-			.append("type=").append(logintype).append("&")
-			.append(serviceParameterName).append("=")
-			.append(CommonUtils.urlEncode(serviceUrl))
-			.append((isrenew) ? "&renew=true" : "")
-			.append((isgateway) ? "&gateway=true" : "");
-		}
+		buffer.append(casLoginUrl)
+		.append((casLoginUrl.contains("?")) ? "&" : "?")
+		.append(serviceParameterName).append("=")
+		.append(CommonUtils.urlEncode(serviceUrl))
+		.append((isrenew) ? "&renew=true" : "")
+		.append((isgateway) ? "&gateway=true" : "");
 		
 		return buffer.toString();
 	}
@@ -231,14 +210,6 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
         final String requestUri = urlBuffer.toString();
         return this.ignoreUrlPatternMatcherStrategyClass.matches(requestUri);
     }
-
-	public String getLoginType() {
-		return loginType;
-	}
-
-	public void setLoginType(String loginType) {
-		this.loginType = loginType;
-	}
 
 	public String getLogOutServerUrl() {
 		return logOutServerUrl;

@@ -11,10 +11,11 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WrappedFilterConfig implements FilterConfig {
-	private static final Logger LOG = Logger.getLogger(WrappedFilterConfig.class);
+	private static final Logger LOG = LoggerFactory.getLogger(WrappedFilterConfig.class);
 	private Map<String, String> params;
 	
 	private FilterConfig filterConfig;
