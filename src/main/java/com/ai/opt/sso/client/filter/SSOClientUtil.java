@@ -14,19 +14,19 @@ import org.slf4j.LoggerFactory;
  * 
  * @author gucl
  */
-public final class SSOUtil {
+public final class SSOClientUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SSOUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SSOClientUtil.class);
 
     private static Properties prop = new Properties();
 
-    private SSOUtil() {
+    private SSOClientUtil() {
     }
 
     static {
         try {
 
-            InputStream inStream = SSOUtil.class.getClassLoader().getResourceAsStream(
+            InputStream inStream = SSOClientUtil.class.getClassLoader().getResourceAsStream(
                     "sso.properties");
             prop.load(inStream);
 

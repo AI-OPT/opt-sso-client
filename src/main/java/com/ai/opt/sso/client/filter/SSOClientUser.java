@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Copyright (c) 2016 asiainfo.com <br>
  * @author gucl
  */
-public class SSOUser implements Serializable {
+public class SSOClientUser implements Serializable {
     private static final long serialVersionUID = -8147635836938729264L;
 
     //登录名称
