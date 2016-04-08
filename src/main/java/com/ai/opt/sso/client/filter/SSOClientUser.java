@@ -36,7 +36,15 @@ public class SSOClientUser implements Serializable {
     //微博
     private String weibo;
     //qq
-    private String qq;
+    private String qq;    
+    
+    //以下字段单点登录服务端无法获取，需由各客户端通过查询业务获取，
+    //行业类型（登录后各客户端查询业务表得出）
+    private String industryCode;
+    //行业名称（登录后各客户端查询业务表得出）
+    private String industryName;
+    //租户名称（登录后各客户端查询业务表得出）
+    private String tenantName;
     
     
 	public String getUsername() {
@@ -111,8 +119,24 @@ public class SSOClientUser implements Serializable {
 	public void setAccountId(long accountId) {
 		this.accountId = accountId;
 	}
-	
-    
+	public String getIndustryCode() {
+		return industryCode;
+	}
+	public void setIndustryCode(String industryCode) {
+		this.industryCode = industryCode;
+	}
+	public String getIndustryName() {
+		return industryName;
+	}
+	public void setIndustryName(String industryName) {
+		this.industryName = industryName;
+	}
+	public String getTenantName() {
+		return tenantName;
+	}
+	public void setTenantName(String tenantName) {
+		this.tenantName = tenantName;
+	}
     
 
 }
