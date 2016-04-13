@@ -23,6 +23,8 @@ public class SSOUser implements Serializable {
     private String accountName;
     //昵称
     private String nickName;
+    //缩写昵称
+    private String shortNickname;
     //手机号码
     private String phone;
     //邮件
@@ -112,7 +114,12 @@ public class SSOUser implements Serializable {
 		this.qq = qq;
 	}
 	
-    
+	public String getShortNickname() {
+        return shortNickname;
+    }
+    public void setShortNickname(String shortNickname) {
+        this.shortNickname = shortNickname;
+    }
     
 
 }
