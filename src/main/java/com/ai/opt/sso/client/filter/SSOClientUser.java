@@ -23,6 +23,8 @@ public class SSOClientUser implements Serializable {
     private String accountName;
     //昵称
     private String nickName;
+    //昵称缩写
+    private String shortNickName;
     //手机号码
     private String phone;
     //邮件
@@ -137,6 +139,12 @@ public class SSOClientUser implements Serializable {
 	public void setTenantName(String tenantName) {
 		this.tenantName = tenantName;
 	}
+    public String getShortNickName() {
+        return shortNickName;
+    }
+    public void setShortNickName(String shortNickName) {
+        this.shortNickName = shortNickName;
+    }
     
 
 }
