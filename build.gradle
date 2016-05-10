@@ -28,9 +28,8 @@ group="com.ai.opt.sso.client"
 dependencies {
 	compile "org.jasig.cas.client:cas-client-core:3.3.3"
 	compile "javax.servlet:javax.servlet-api:3.1.0"
-	compile 'com.ai.opt.sdk:opt-sdk:1.0-SNAPSHOT'
 	//uni session
-	compile 'com.ai.opt.uni.session:opt-uni-session:1.0-SNAPSHOT'
+	compile 'com.ai.opt.uni.session:opt-uni-session:2.0-SNAPSHOT'
 
 	testCompile(
 			"org.springframework:spring-test:3.2.6.RELEASE",
