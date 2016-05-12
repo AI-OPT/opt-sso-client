@@ -21,7 +21,10 @@ ext {
 }
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-configurations.all { resolutionStrategy.cacheChangingModulesFor 0, 'seconds' }
+configurations.all { 
+	    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	    resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+ 	}
 
 group="com.ai.opt.sso.client"
 
