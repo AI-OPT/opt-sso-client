@@ -3,7 +3,7 @@ package com.ai.opt.sso.client.filter;
 import java.io.Serializable;
 
 /**
- * SSOUser 单点登录成功后的User实体
+ * BaaS 项目 SSOUser 单点登录成功后的User实体
  *
  * Date: 2016年3月16日 <br>
  * Copyright (c) 2016 asiainfo.com <br>
