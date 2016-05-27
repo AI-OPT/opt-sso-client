@@ -18,7 +18,7 @@ public class SLPClientUser implements Serializable {
     //租户id
     private String tenantId;
     //账号ID
-    private long userId;
+    private String userId;
     //用户类型
     private String userType;
     //用户flag
@@ -78,10 +78,10 @@ public class SLPClientUser implements Serializable {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
-	public long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
-	public void setUserId(long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 	public String getUserType() {
