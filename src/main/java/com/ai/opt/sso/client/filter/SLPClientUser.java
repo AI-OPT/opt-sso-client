@@ -64,7 +64,8 @@ public class SLPClientUser implements Serializable {
     private String industryName;
     //租户名称（登录后各客户端查询业务表得出）
     private String tenantName;
-    
+    //账管账户ID
+    private long acctId;
     
 	public String getUsername() {
 		return username;
@@ -209,6 +210,12 @@ public class SLPClientUser implements Serializable {
 	}
 	public void setTenantName(String tenantName) {
 		this.tenantName = tenantName;
+	}
+	public long getAcctId() {
+		return acctId;
+	}
+	public void setAcctId(long acctId) {
+		this.acctId = acctId;
 	}
     
 
