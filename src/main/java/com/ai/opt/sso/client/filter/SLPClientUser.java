@@ -223,5 +223,19 @@ public class SLPClientUser implements Serializable {
 		this.acctId = acctId;
 	}
     
+	
+	public static final class USERTYPE{
+		private USERTYPE(){};
+		 /**用户类型:
+	     * 10：个人
+		 * 11：企业
+		 * 12：代理人
+		 * 13：供应商
+	     */
+		public static final String PERSONAL="10";
+		public static final String COMPANY="11";
+		public static final String AGENT="12";
+		public static final String SUPPLIER="13";
+	}
 
 }
