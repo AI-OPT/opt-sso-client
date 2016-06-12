@@ -19,7 +19,12 @@ public class SLPClientUser implements Serializable {
     private String tenantId;
     //账号ID
     private String userId;
-    //用户类型
+    /**用户类型:
+     * 10：个人
+	 * 11：企业
+	 * 12：代理人
+	 * 13：供应商
+     */
     private String userType;
     //用户flag
     private String userFlag;
