@@ -22,8 +22,8 @@ public class SLPClientUser implements Serializable {
     /**用户类型:
      * 10：个人
 	 * 11：企业
-	 * 12：代理人
-	 * 13：供应商
+	 * 12：代理商
+	 * 13：供货商
      */
     private String userType;
     //用户flag
