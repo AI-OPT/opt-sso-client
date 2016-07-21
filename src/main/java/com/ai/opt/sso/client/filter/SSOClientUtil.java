@@ -1,6 +1,8 @@
 package com.ai.opt.sso.client.filter;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,9 +22,25 @@ public final class SSOClientUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(SSOClientUtil.class);
 
+    //sso.properties属性文件
     private static Properties prop = new Properties();
-
-    private SSOClientUtil() {
+    
+    //内网域名
+    private static String[] innerDomains;
+    
+    public static Properties getProp() {
+		return prop;
+	}
+	public static void setProp(Properties prop) {
+		SSOClientUtil.prop = prop;
+	}
+	public static String[] getInnerDomains() {
+		return innerDomains;
+	}
+	public static void setInnerDomains(String[] innerDomains) {
+		SSOClientUtil.innerDomains = innerDomains;
+	}
+	private SSOClientUtil() {
     }
 
     static {
@@ -31,7 +49,10 @@ public final class SSOClientUtil {
             InputStream inStream = SSOClientUtil.class.getClassLoader().getResourceAsStream(
                     "sso.properties");
             prop.load(inStream);
-
+            String strInnerDomains=prop.getProperty("innerDomains","");
+            if(!"".equalsIgnoreCase(strInnerDomains.trim())){
+            	innerDomains=strInnerDomains.split(",");
+            }
             LOG.debug("加载sso.properties完毕");
         } catch (Exception e) {
             LOG.debug("加载sso.properties失败，具体原因：" + e.getMessage(), e);
@@ -64,7 +85,7 @@ public final class SSOClientUtil {
      */
     public static String getCasServerLoginUrlRuntime(HttpServletRequest request) {
     	String serverName=request.getServerName();
-		boolean innerFlag=IPHelper.isInnerIP(serverName);
+		boolean innerFlag=IPHelper.isInnerIP(serverName,innerDomains);
 		if(!innerFlag){
 			return prop.getProperty("casServerLoginUrl", "").trim();
 		}
@@ -98,7 +119,7 @@ public final class SSOClientUtil {
      */
     public static String getCasServerUrlPrefixRuntime(HttpServletRequest request) {
     	String serverName=request.getServerName();
-		boolean innerFlag=IPHelper.isInnerIP(serverName);
+		boolean innerFlag=IPHelper.isInnerIP(serverName,innerDomains);
 		if(!innerFlag){
 			return prop.getProperty("casServerUrlPrefix", "").trim();
 		}
@@ -131,7 +152,7 @@ public final class SSOClientUtil {
      */
     public static String getServerNameRuntime(HttpServletRequest request) {
     	String serverName=request.getServerName();
-		boolean innerFlag=IPHelper.isInnerIP(serverName);
+		boolean innerFlag=IPHelper.isInnerIP(serverName,innerDomains);
 		if(!innerFlag){
 			return prop.getProperty("serverName", "").trim();
 		}
@@ -171,7 +192,7 @@ public final class SSOClientUtil {
      */
     public static String getLogOutServerUrlRuntime(HttpServletRequest request) {
     	String serverName=request.getServerName();
-		boolean innerFlag=IPHelper.isInnerIP(serverName);
+		boolean innerFlag=IPHelper.isInnerIP(serverName,innerDomains);
 		if(!innerFlag){
 			return prop.getProperty("logOutServerUrl", "").trim();
 		}
@@ -204,7 +225,7 @@ public final class SSOClientUtil {
      */
     public static String getLogOutBackUrlRuntime(HttpServletRequest request) {
     	String serverName=request.getServerName();
-		boolean innerFlag=IPHelper.isInnerIP(serverName);
+		boolean innerFlag=IPHelper.isInnerIP(serverName,innerDomains);
 		if(!innerFlag){
 			return prop.getProperty("logOutBackUrl", "").trim();
 		}

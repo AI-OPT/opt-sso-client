@@ -72,7 +72,7 @@ public class WrappedFilterConfig implements FilterConfig {
 	
 	private Map<String,String> initParams(HttpServletRequest httpRequest){
 		String serverName=httpRequest.getServerName();
-		boolean innerFlag=IPHelper.isInnerIP(serverName);
+		boolean innerFlag=IPHelper.isInnerIP(serverName,SSOClientUtil.getInnerDomains());
 		Map<String, String> map = initParams();
 		try {
 			if(innerFlag){

@@ -84,6 +84,10 @@ public class IPHelper {
 	 * @author gucl
 	 */
 	public static boolean isInnerIP(String ipAddress) {
+		return isInnerIP(ipAddress,null);
+	}
+	
+	public static boolean isInnerIP(String ipAddress,String[] innerDomains) {
 		boolean isInnerIp = false;
 		boolean isIPFlag = isIP(ipAddress);
 		if (isIPFlag) {
@@ -103,6 +107,14 @@ public class IPHelper {
 		} else {
 			if ("localhost".equalsIgnoreCase(ipAddress)) {
 				isInnerIp = true;
+			}
+			if(innerDomains!=null&&innerDomains.length>0){
+				for(String domain:innerDomains){
+					if(ipAddress.contains(domain)){
+						isInnerIp=true;
+						break;
+					}
+				}
 			}
 		}
 		return isInnerIp;
