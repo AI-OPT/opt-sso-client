@@ -14,6 +14,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.util.AbstractConfigurationFilter;
 import org.jasig.cas.client.util.AssertionThreadLocalFilter;
@@ -153,7 +154,7 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 			return false;
 		}else{
 			for (String suffix : ignore_resources) {
-				if (requestUrl.endsWith(suffix.toLowerCase())) {
+				if (!StringUtils.isBlank(suffix)&&requestUrl.endsWith(suffix.trim().toLowerCase())) {
 					return true;
 				}
 			} 
