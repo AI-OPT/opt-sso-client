@@ -16,15 +16,15 @@ import org.slf4j.LoggerFactory;
 
 public class WrappedFilterConfig implements FilterConfig {
 	private static final Logger LOG = LoggerFactory.getLogger(WrappedFilterConfig.class);
-	private Map<String, String> params;
+	private static Map<String, String> params=new ConcurrentHashMap<String, String>();
 	
 	private FilterConfig filterConfig;
 	
-	private static Map<String, String> map = new ConcurrentHashMap<String, String>();
+	//private static Map<String, String> map = new ConcurrentHashMap<String, String>();
 	
 	public WrappedFilterConfig(FilterConfig filterConfig){
 		this.filterConfig = filterConfig;
-		this.params = initParams();
+		initParams();
 	}
 	/**
 	 * 根据内外网自动调整IP参数
@@ -33,7 +33,7 @@ public class WrappedFilterConfig implements FilterConfig {
 	 */
 	public WrappedFilterConfig(FilterConfig currentFilterConfig, HttpServletRequest httpRequest) {
 		this.filterConfig = currentFilterConfig;
-		this.params = initParams(httpRequest);
+		initParams(httpRequest);
 	}
 
 	@Override
@@ -72,21 +72,21 @@ public class WrappedFilterConfig implements FilterConfig {
 		return filterConfig.getServletContext();
 	}
 	
-	private Map<String,String> initParams(HttpServletRequest httpRequest){
+	private void initParams(HttpServletRequest httpRequest){
 		String serverName=httpRequest.getServerName();
 		boolean innerFlag=IPHelper.isInnerIP(serverName,SSOClientUtil.getInnerDomains());
-		Map<String, String> map = initParams();
+		initParams();
 		try {
 			if(innerFlag){
 				//若是内网访问，则单点登录走内网
-				Iterator iter = map.entrySet().iterator();
+				Iterator iter = params.entrySet().iterator();
 					while (iter.hasNext()) {
 						Map.Entry<String, String> entry = (Map.Entry<String, String>) iter.next();
 						String key = entry.getKey();
 						if(null!=key&&!"".equals(key)&&key.endsWith("_Inner")){
 							String val = entry.getValue();
 							String keyNormal=key.replace("_Inner", "");
-							map.put(keyNormal, val);
+							params.put(keyNormal, val);
 						}
 						
 						
@@ -95,31 +95,38 @@ public class WrappedFilterConfig implements FilterConfig {
 		} catch (Exception e) {
 			LOG.error("init WrappedFilterConfig failure",e);
 		}
-		return map;
 	}
 	
-	private Map<String,String> initParams(){
+	private void initParams(){
 		//jvm里如果有map，则直接返回
-		if(!map.isEmpty()){
-			return map;
+		if(!params.isEmpty()){
+			return;
 		}
 		//jvm里如果没有map，则读取sso.properties文件
 		else{
-			Properties properties = new Properties();		
-			try {
-				ClassLoader loader = WrappedFilterConfig.class.getClassLoader();
-				properties.load(loader.getResourceAsStream("sso.properties"));
-				for (Object obj : properties.keySet()) {
-					String key = (String) obj;
-					if(key!=null){
-						map.put(key.trim(), properties.getProperty(key).trim());
+			//同步加锁
+			synchronized (WrappedFilterConfig.class) {
+				//加锁后，还没有的话，则读取sso.properties文件，否则说明其他线程已加载，无需重复加载
+				if(params.isEmpty()){
+					Properties properties = new Properties();		
+					try {
+						ClassLoader loader = WrappedFilterConfig.class.getClassLoader();
+						properties.load(loader.getResourceAsStream("sso.properties"));
+						for (Object obj : properties.keySet()) {
+							String key = (String) obj;
+							if(key!=null){
+								params.put(key.trim(), properties.getProperty(key).trim());
+							}
+						}
+					} catch (IOException e) {
+						LOG.error("init WrappedFilterConfig failure",e);
 					}
+						
+					
 				}
-			} catch (IOException e) {
-				LOG.error("init WrappedFilterConfig failure",e);
-			}
-			return map;			
-		}
+			}// end synchronized
+			
+		}//end else
 	}
 	
 	private void printParams(){
