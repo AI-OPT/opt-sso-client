@@ -170,7 +170,7 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 
 	@Override
 	public void destroy() {
-		if(filterlistMap!=null){
+		if(filterlistMap!=null&&filterlistMap.get()!=null){
 			for (List<Filter> list : filterlistMap.get().values()) {
 				for(Filter filter : list){
 					if(filter!=null){
