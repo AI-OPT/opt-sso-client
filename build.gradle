@@ -24,6 +24,9 @@ sourceCompatibility = 1.7
 configurations.all { 
 	    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 	    resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+	    exclude group: 'log4j', module: 'log4j'
+    	exclude group: "org.slf4j", module: "slf4j-log4j12"
+    	exclude group: "org.slf4j", module: "log4j-over-slf4j"
  	}
 
 group="com.ai.opt.sso.client"
@@ -74,6 +77,12 @@ publishing {
 							delegate.groupId("org.jasig.cas.client")
 							delegate.artifactId("cas-client-core")
 							delegate.version("3.3.3")
+							delegate.exclusions{
+                                delegate.exclusion{
+                                    delegate.groupId("org.slf4j")
+                                    delegate.artifactId("log4j-over-slf4j")
+                                }
+                            }
 						}
 					}
 				}
