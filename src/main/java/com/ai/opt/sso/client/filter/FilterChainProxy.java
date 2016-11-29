@@ -83,7 +83,7 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 		Map<String, List<Filter>> listmap = new HashMap<String, List<Filter>>();
 		List<Filter> ssolist = new ArrayList<Filter>();
 		
-		ssolist.add(new SingleSignOutFilter());  
+		//ssolist.add(new SingleSignOutFilter());  
 		ssolist.add(new CustomAuthenticationFilter());  
 		ssolist.add(new Cas20ProxyReceivingTicketValidationFilter());  
 		ssolist.add(new AssertionThreadLocalFilter());  
