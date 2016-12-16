@@ -38,9 +38,13 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 	private ThreadLocal<Map<String, String>> threadParams=new ThreadLocal<Map<String, String>>();
 	private FilterConfig currentFilterConfig;
 	
+	/**
+	 * 初始化过滤器
+	 */
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		this.currentFilterConfig=filterConfig;
+		//获取忽略列表
 		String exclude = currentFilterConfig.getInitParameter("ignore_resources");
 		if(exclude!=null){
 			ignore_resources = exclude.split(",");
@@ -48,6 +52,12 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 		initParams();
 		
 	}
+	/**
+	 * 读取sso.properties初始化参数（params属性）
+	 * 
+	 * @author jackieliu
+	 * @ApiDocMethod
+	 */
 	private void initParams(){
 		//jvm里如果有map，则直接返回
 		if(!params.isEmpty()){
@@ -79,10 +89,17 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 			
 		}//end else
 	}
+	
+	/**
+	 * 初始化过滤器链
+	 * @return
+	 * @author jackieliu
+	 * @ApiDocMethod
+	 */
 	private ThreadLocal<Map<String, List<Filter>>> ObtainAllDefinedFilters() {
 		Map<String, List<Filter>> listmap = new HashMap<String, List<Filter>>();
 		List<Filter> ssolist = new ArrayList<Filter>();
-		
+		//cas的单点登出
 		ssolist.add(new SingleSignOutFilter());  
 		ssolist.add(new CustomAuthenticationFilter());  
 		ssolist.add(new Cas20ProxyReceivingTicketValidationFilter());  
