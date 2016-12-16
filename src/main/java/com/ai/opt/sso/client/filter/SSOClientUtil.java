@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 public final class SSOClientUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(SSOClientUtil.class);
+    
+    
 
     //sso.properties属性文件
     private static Properties prop = new Properties();
@@ -216,6 +218,24 @@ public final class SSOClientUtil {
      */
     public static String getLogOutBackUrlInner() {
     	return prop.getProperty("logOutBackUrl_Inner", "").trim();
+    }
+    /**
+     * 获取用户语言的URL参数名
+     * @return
+     * @author jackieliu
+     * @ApiDocMethod
+     */
+    public static String getLocaleParamName(){
+        return prop.getProperty(SSOClientConstants.LOCALE_PARAM_NAME,"").trim();
+    }
+    /**
+     * 获取用户语言的cookie名
+     * @return
+     * @author jackieliu
+     * @ApiDocMethod
+     */
+    public static String getLocaleCookieName(){
+        return prop.getProperty(SSOClientConstants.LOCALE_COOKIE_NAME,"").trim();
     }
     /**
      * 单点登录登出后返回地址(自动判断内外网)

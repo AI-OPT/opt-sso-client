@@ -9,6 +9,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -46,6 +47,10 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
     private boolean renew = false;
 
     private boolean gateway = false;
+    
+    private String localeParamName;
+    
+    private String localeCookieName;
 
     private GatewayResolver gatewayStorage = new DefaultGatewayResolverImpl();
 
@@ -77,6 +82,11 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
             logger.trace("Loaded logOutServerUrl parameter: {}", this.logOutServerUrl);
             setLogOutBackUrl(getPropertyFromInitParams(filterConfig, "logOutBackUrl", null));
             logger.trace("Loaded logOutBackUrl parameter: {}", this.logOutBackUrl);
+            
+            setLocaleParamName(getPropertyFromInitParams(filterConfig,SSOClientConstants.LOCALE_PARAM_NAME,null));
+            logger.trace("Loaded localeParamName parameter: {}", this.localeParamName);
+            setLocaleCookieName(getPropertyFromInitParams(filterConfig,SSOClientConstants.LOCALE_COOKIE_NAME,null));
+            logger.trace("Loaded localeCookieName parameter: {}", this.localeCookieName);
             
             final String ignorePattern = getPropertyFromInitParams(filterConfig, "ignorePattern", null);
             logger.trace("Loaded ignorePattern parameter: {}", ignorePattern);
@@ -161,14 +171,26 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
 
         logger.debug("Constructed service url: {}", modifiedServiceUrl);
 
-        final String urlToRedirectTo = constructRedirectUrl(this.casServerLoginUrl,
+        final String urlToRedirectTo = constructRedirectUrl(this.casServerLoginUrl,getLocale(request),
                 getServiceParameterName(), modifiedServiceUrl, this.renew, this.gateway);
 
         logger.debug("redirecting to \"{}\"", urlToRedirectTo);
         this.authenticationRedirectStrategy.redirect(request, response, urlToRedirectTo);
 	}
 
-	protected String constructRedirectUrl(String casLoginUrl,
+	/**
+	 * 产生重定向地址
+	 * @param casLoginUrl cas登录地址
+	 * @param locale 当前所用语言，如en_US,zh_CN
+	 * @param serviceParameterName
+	 * @param serviceUrl
+	 * @param isrenew
+	 * @param isgateway
+	 * @return
+	 * @author jackieliu
+	 * @ApiDocMethod
+	 */
+	protected String constructRedirectUrl(String casLoginUrl,String locale,
 			String serviceParameterName, String serviceUrl, boolean isrenew,
 			boolean isgateway) {
 		StringBuffer buffer = new StringBuffer();
@@ -178,6 +200,9 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
 		.append(CommonUtils.urlEncode(serviceUrl))
 		.append((isrenew) ? "&renew=true" : "")
 		.append((isgateway) ? "&gateway=true" : "");
+		if(locale!=null && locale.trim().length()>0){
+		    buffer.append("&locale=").append(locale);
+		}
 		
 		return buffer.toString();
 	}
@@ -210,6 +235,32 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
         final String requestUri = urlBuffer.toString();
         return this.ignoreUrlPatternMatcherStrategyClass.matches(requestUri);
     }
+    /**
+     * 获取当前所用语言
+     * @param request
+     * @return
+     * @author jackieliu
+     * @ApiDocMethod
+     */
+    private String getLocale(HttpServletRequest request){
+        String localeStr = null;
+        //获取地址中参数
+        if(StringUtils.isNotBlank(this.localeParamName)){
+            localeStr = request.getParameter(this.localeParamName);
+        }
+        //获取cookie
+        if(StringUtils.isBlank(localeStr) 
+                && StringUtils.isNotBlank(this.localeCookieName)){
+            Cookie[] cookies = request.getCookies();
+            for(Cookie cookie:cookies){
+                if(this.localeCookieName.equals(cookie.getName())){
+                    localeStr = cookie.getValue();
+                }
+            }
+        }
+        
+        return localeStr;
+    }
 
 	public String getLogOutServerUrl() {
 		return logOutServerUrl;
@@ -226,5 +277,22 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
 	public void setLogOutBackUrl(String logOutBackUrl) {
 		this.logOutBackUrl = logOutBackUrl;
 	}
+
+    public String getLocaleParamName() {
+        return localeParamName;
+    }
+
+    public void setLocaleParamName(String localeParamName) {
+        this.localeParamName = localeParamName;
+    }
+
+    public String getLocaleCookieName() {
+        return localeCookieName;
+    }
+
+    public void setLocaleCookieName(String localeCookieName) {
+        this.localeCookieName = localeCookieName;
+    }
+	
 	
 }
