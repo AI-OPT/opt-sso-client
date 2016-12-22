@@ -248,10 +248,13 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
         if(StringUtils.isNotBlank(this.localeParamName)){
             localeStr = request.getParameter(this.localeParamName);
         }
+        Cookie[] cookies = request.getCookies();
         //获取cookie
         if(StringUtils.isBlank(localeStr) 
-                && StringUtils.isNotBlank(this.localeCookieName)){
-            Cookie[] cookies = request.getCookies();
+                && StringUtils.isNotBlank(this.localeCookieName)
+                && cookies!=null
+                && cookies.length >0){
+            
             for(Cookie cookie:cookies){
                 if(this.localeCookieName.equals(cookie.getName())){
                     localeStr = cookie.getValue();
