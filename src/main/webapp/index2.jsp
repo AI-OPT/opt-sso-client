@@ -27,7 +27,7 @@ if(principal!=null){
 if(principal!=null){
 %>
 
-<a href="<%=request.getContextPath() %>/ssologout">退出登录</a>
+<a href="<%=request.getContextPath() %>/logout.jsp">退出登录</a>
 
 <%
 }

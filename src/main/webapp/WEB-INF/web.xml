@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>ibss-web-sysmanage</display-name>
- 
+  <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:context/core-context.xml</param-value>
+    </context-param>
  <!--  <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -19,8 +22,15 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
    -->
-   
- 
+ <filter>
+	  <filter-name>xss-firewall</filter-name>
+	  <filter-class>com.ai.net.xss.filter.XSSFilter</filter-class>
+  </filter>	
+  <filter-mapping>
+	  <filter-name>xss-firewall</filter-name>
+	  <url-pattern>/*</url-pattern>
+  </filter-mapping> 
+ <!-- 
  <filter>
     <filter-name>sessionFilter</filter-name>
     <filter-class>com.ai.opt.uni.session.filter.CacheSessionFilter</filter-class>
@@ -33,11 +43,10 @@
     <filter-name>sessionFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
- 
-<listener>
+ -->
+<!-- <listener>
 	<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
-</listener>
-
+</listener> -->
 <filter>
   	<filter-name>ssoProxyFilter</filter-name>
   	<filter-class>com.ai.opt.sso.client.filter.FilterChainProxy</filter-class>
@@ -50,6 +59,33 @@
   	<filter-name>ssoProxyFilter</filter-name>
   	<url-pattern>/*</url-pattern>
   </filter-mapping>
+  <filter>
+        <filter-name>assembleUserInfoFilter</filter-name>
+        <filter-class>com.ai.opt.demo.filter.AssembleUserInfoFilter</filter-class>
+        <init-param>
+            <param-name>ignore_suffix</param-name>
+            <param-value>.png,.jpg,.jpeg,.gif,.css,.js,.html,.htm</param-value>
+        </init-param>
+   </filter>
+   <filter-mapping>
+       <filter-name>assembleUserInfoFilter</filter-name>
+       <url-pattern>/*</url-pattern>
+   </filter-mapping>
+   <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>
+                classpath:context/springmvc-servlet.xml
+            </param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 <!-- 
   <filter>
     <filter-name>CSRFFilter</filter-name>
