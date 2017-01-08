@@ -36,6 +36,13 @@ dependencies {
 	compile "javax.servlet:javax.servlet-api:3.1.0"
 	//uni session
 	compile 'com.ai.opt.uni.session:opt-uni-session:2.0-SNAPSHOT'
+	
+	//test for demo
+	compile "jstl:jstl:1.2"
+    compile "org.springframework:spring-web:4.1.7.RELEASE"
+    compile "org.springframework:spring-webmvc:4.1.7.RELEASE"
+    compile 'org.springframework:spring-context-support:4.1.7.RELEASE'
+    compile "com.fasterxml.jackson.core:jackson-databind:2.6.0"
 
 	testCompile(
 			"org.springframework:spring-test:3.2.6.RELEASE",
