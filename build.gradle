@@ -12,7 +12,7 @@ repositories {
 }
 ext {
 	appName = "opt-sso-client"
-	moduleVersion = "1.0.3-SNAPSHOT"
+	moduleVersion = "1.0.2-ch-SNAPSHOT"
 	builtBy = "gradle 2.4"
 	publishUserName = "runnerdev"
 	publishUserPassword = "runnerdev"
@@ -43,6 +43,8 @@ dependencies {
     compile "org.springframework:spring-webmvc:4.1.7.RELEASE"
     compile 'org.springframework:spring-context-support:4.1.7.RELEASE'
     compile "com.fasterxml.jackson.core:jackson-databind:2.6.0"
+    compile "commons-fileupload:commons-fileupload:1.3.1"
+    compile "commons-io:commons-io:2.4"
 
 	testCompile(
 			"org.springframework:spring-test:3.2.6.RELEASE",

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+ <Appenders>
+    <Console name="STDOUT" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+    </Console>
+    <RollingFile name="RollingFile" fileName="/logs/sso-client.log"
+                     filePattern="/logs/$${date:yyyy-MM}/sso-client-%d{yyyy-MM-dd}-%i.log">
+       <PatternLayout>
+         <Pattern>%d %-5p [%t] %C{2} (%F:%L) - %m%n</Pattern>
+       </PatternLayout>
+       <Policies>
+         <TimeBasedTriggeringPolicy />
+         <SizeBasedTriggeringPolicy size="250 MB"/>
+       </Policies>
+       <DefaultRolloverStrategy max="20"/>
+     </RollingFile>
+    <Async name="ASYNC">
+      <AppenderRef ref="RollingFile"/>
+      <AppenderRef ref="STDOUT"/>
+    </Async>
+  </Appenders>
+  <Loggers>
+    <Root level="info">
+      <AppenderRef ref="RollingFile"/>
+      <AppenderRef ref="STDOUT"/>
+    </Root>
+  </Loggers>
+</Configuration>
