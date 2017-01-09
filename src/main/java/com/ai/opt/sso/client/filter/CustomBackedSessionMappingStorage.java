@@ -7,7 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ai.opt.sdk.components.mcs.MCSClientFactory;
+import com.ai.opt.uni.session.impl.CacheHttpSession;
 import com.ai.opt.uni.session.impl.SessionClient;
+import com.ai.opt.uni.session.impl.SessionListenerAdaptor;
+import com.ai.opt.uni.session.impl.SessionManager;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 
 public final class CustomBackedSessionMappingStorage implements SessionMappingStorage {
@@ -23,18 +26,18 @@ public final class CustomBackedSessionMappingStorage implements SessionMappingSt
 	}
 
 	public synchronized void addSessionById(String mappingId, HttpSession session) {
-		this.logger.info("addSessionById:", mappingId);
+		this.logger.info("addSessionById:"+ mappingId);
 		jedis.hset(SESSION_KEY_MAPPINGID, session.getId(), mappingId);
 		jedis.hset(MAPPINGID_KEY_SESSION, mappingId, session.getId());
 	}
 
 	public synchronized void removeBySessionById(String sessionId) {
 		this.logger.debug("Attempting to remove Session=[{}]", sessionId);
-		Object obj = sessionClient.getSession(sessionId);
-		if (obj != null) {
-			HttpSession session = (HttpSession) obj;
-			session.invalidate();
-		}
+//		Object obj = sessionClient.getSession("R_JSID_"+sessionId);
+//		if (obj != null) {
+//			HttpSession session = (HttpSession) obj;
+//			session.invalidate();
+//		}
 		String key = jedis.hget(SESSION_KEY_MAPPINGID, sessionId);
 		jedis.hdel(SESSION_KEY_MAPPINGID, sessionId);
 		if (key != null)
@@ -44,15 +47,20 @@ public final class CustomBackedSessionMappingStorage implements SessionMappingSt
 
 	public synchronized HttpSession removeSessionByMappingId(String mappingId) {
 		Object obj = jedis.hget(MAPPINGID_KEY_SESSION, mappingId);
-		this.logger.info("removeSessionByMappingId:mappingId", mappingId);
+		this.logger.info("removeSessionByMappingId:mappingId"+mappingId);
 		if (null == obj)
 			return null;
 		String sessionId = (String) obj;
-		this.logger.info("removeSessionByMappingId:sessionId", sessionId);
-		obj = sessionClient.getSession(sessionId);
+		this.logger.info("removeSessionByMappingId:sessionId"+sessionId);
+		obj = sessionClient.getSession("R_JSID_"+sessionId);
 		if (obj != null) {
-			HttpSession session = (HttpSession) obj;
+			CacheHttpSession session = (CacheHttpSession) obj;
 			removeBySessionById(sessionId);
+			session.setListener(new SessionListenerAdaptor() {
+	            public void onInvalidated(CacheHttpSession session) {
+	            	sessionClient.delItem("R_JSID_"+session.getId());
+	            }
+	        });
 			return session;
 		}
 		return null;
