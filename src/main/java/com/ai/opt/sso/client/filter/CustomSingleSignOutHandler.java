@@ -36,6 +36,8 @@ import org.jasig.cas.client.util.XmlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
+
 /**
  * Performs CAS single sign-out operations in an API-agnostic fashion.
  *
@@ -302,27 +304,28 @@ public final class CustomSingleSignOutHandler {
         logger.info("Logout request:\n{}", logoutMessage);
 
         final String token = XmlUtils.getTextForElement(logoutMessage, "SessionIndex");
+        logger.info("【destroySession】token="+token);
         if (CommonUtils.isNotBlank(token)) {
+        	logger.info("【destroySession】sessionMappingStorage中的信息："+JSON.toJSONString(this.sessionMappingStorage));
             final HttpSession session = this.sessionMappingStorage.removeSessionByMappingId(token);
-
             if (session != null) {
+            	logger.info("【destroySession】从sessionMappingStorage 获取到session["+session.getId()+"]");
                 String sessionID = session.getId();
 
-                logger.info("Invalidating session [{}] for token [{}]", sessionID, token);
+                logger.info("【destroySession】Invalidating session [{}] for token [{}]", sessionID, token);
 
                 try {
                     session.invalidate();
                 } catch (final IllegalStateException e) {
-                    logger.info("Error invalidating session.", e);
+                    logger.error("【destroySession】Error invalidating session."+e.getMessage(), e);
                 }
                 this.logoutStrategy.logout(request);
             }
+            else{
+            	logger.info("【destroySession】从sessionMappingStorage 获取session为空");
+            }
         }
-        //如果上面无法清除session，则手动清除session
-        if(request.getSession()!=null){
-        	logger.info("【destroySession】手动清除session");
-        	request.getSession().invalidate();
-        }
+        
     }
 
     /**
