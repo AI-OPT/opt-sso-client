@@ -29,7 +29,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.jasig.cas.client.session.HashMapBackedSessionMappingStorage;
 import org.jasig.cas.client.session.SessionMappingStorage;
 import org.jasig.cas.client.util.CommonUtils;
 import org.jasig.cas.client.util.XmlUtils;
@@ -59,7 +58,7 @@ public final class CustomSingleSignOutHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /** Mapping of token IDs and session IDs to HTTP sessions */
-    private SessionMappingStorage sessionMappingStorage = new HashMapBackedSessionMappingStorage();
+    private SessionMappingStorage sessionMappingStorage = new CustomBackedSessionMappingStorage();
 
     /** The name of the artifact parameter.  This is used to capture the session identifier. */
     private String artifactParameterName = DEFAULT_ARTIFACT_PARAMETER_NAME;
