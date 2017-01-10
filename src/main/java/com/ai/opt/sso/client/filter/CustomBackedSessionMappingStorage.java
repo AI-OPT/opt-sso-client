@@ -33,11 +33,6 @@ public final class CustomBackedSessionMappingStorage implements SessionMappingSt
 
 	public synchronized void removeBySessionById(String sessionId) {
 		this.logger.debug("Attempting to remove Session=[{}]", sessionId);
-//		Object obj = sessionClient.getSession("R_JSID_"+sessionId);
-//		if (obj != null) {
-//			HttpSession session = (HttpSession) obj;
-//			session.invalidate();
-//		}
 		String key = jedis.hget(SESSION_KEY_MAPPINGID, sessionId);
 		jedis.hdel(SESSION_KEY_MAPPINGID, sessionId);
 		if (key != null)
@@ -52,13 +47,13 @@ public final class CustomBackedSessionMappingStorage implements SessionMappingSt
 			return null;
 		String sessionId = (String) obj;
 		this.logger.info("removeSessionByMappingId:sessionId"+sessionId);
-		obj = sessionClient.getSession("R_JSID_"+sessionId);
+		obj = sessionClient.getSession(SessionManager.SESSION_ID_PREFIX+sessionId);
 		if (obj != null) {
 			CacheHttpSession session = (CacheHttpSession) obj;
 			removeBySessionById(sessionId);
 			session.setListener(new SessionListenerAdaptor() {
 	            public void onInvalidated(CacheHttpSession session) {
-	            	sessionClient.delItem("R_JSID_"+session.getId());
+	            	sessionClient.delItem(SessionManager.SESSION_ID_PREFIX+session.getId());
 	            }
 	        });
 			return session;
