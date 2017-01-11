@@ -49,6 +49,7 @@ public final class CustomBackedSessionMappingStorage implements SessionMappingSt
 		this.logger.info("removeSessionByMappingId:sessionId"+sessionId);
 		obj = sessionClient.getSession(SessionManager.SESSION_ID_PREFIX+sessionId);
 		if (obj != null) {
+			this.logger.info("removeSessionByMappingId:sessionId is not null!");
 			CacheHttpSession session = (CacheHttpSession) obj;
 			removeBySessionById(sessionId);
 			session.setListener(new SessionListenerAdaptor() {
