@@ -24,10 +24,14 @@ public final class SSOClientUtil {
     
     
 
-    //sso.properties属性文件
+    /**
+     * sso.properties属性文件
+     */
     private static Properties prop = new Properties();
     
-    //内网域名
+    /**
+     * 内网域名
+     */
     private static String[] innerDomains;
     
     public static Properties getProp() {

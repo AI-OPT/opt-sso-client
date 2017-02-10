@@ -13,6 +13,13 @@ import com.ai.opt.uni.session.impl.SessionListenerAdaptor;
 import com.ai.opt.uni.session.impl.SessionManager;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 
+/**
+ * CustomBackedSessionMappingStorage
+ * Date: 2017年2月9日 <br>
+ * Copyright (c) 2017 asiainfo.com <br>
+ * 
+ * @author
+ */
 public final class CustomBackedSessionMappingStorage implements SessionMappingStorage {
 	private final Logger logger;
 	private final static ICacheClient jedis = MCSClientFactory.getCacheClient(SessionClient.getSessionPassNameSpace());
@@ -25,12 +32,17 @@ public final class CustomBackedSessionMappingStorage implements SessionMappingSt
 		this.logger = LoggerFactory.getLogger(super.getClass());
 	}
 
+	/**
+	 *通过id添加session
+	 */
 	public synchronized void addSessionById(String mappingId, HttpSession session) {
 		this.logger.info("addSessionById:"+ mappingId);
 		jedis.hset(SESSION_KEY_MAPPINGID, session.getId(), mappingId);
 		jedis.hset(MAPPINGID_KEY_SESSION, mappingId, session.getId());
 	}
-
+	/**
+	 *通过id移除session
+	 */
 	public synchronized void removeBySessionById(String sessionId) {
 		this.logger.debug("Attempting to remove Session=[{}]", sessionId);
 		String key = jedis.hget(SESSION_KEY_MAPPINGID, sessionId);
@@ -40,6 +52,9 @@ public final class CustomBackedSessionMappingStorage implements SessionMappingSt
 
 	}
 
+	/**
+	 * 通过匹配的id移除session
+	 */
 	public synchronized HttpSession removeSessionByMappingId(String mappingId) {
 		Object obj = jedis.hget(MAPPINGID_KEY_SESSION, mappingId);
 		this.logger.info("removeSessionByMappingId:mappingId"+mappingId);

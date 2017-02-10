@@ -12,40 +12,74 @@ import java.io.Serializable;
 public class SSOClientUser implements Serializable {
     private static final long serialVersionUID = -8147635836938729264L;
 
-    //登录名称
+    /**
+     * 登录名称
+     */
     private String username;
     
-    //账号ID
+    /**
+     * 账号ID
+     */
     private long accountId;
-    //租户id
+    /**
+     * 租户id
+     */
     private String tenantId;
-    //账号名称
+    /**
+     * 账号名称
+     */
     private String accountName;
-    //昵称
+    /**
+     * 昵称
+     */
     private String nickName;
-    //昵称缩写
+    /**
+     * 昵称缩写
+     */
     private String shortNickName;
-    //手机号码
+    /**
+     * 手机号码
+     */
     private String phone;
-    //邮件
+    /**
+     * 邮件
+     */
     private String email;    
-    //账号类型
+    /**
+     * 账号类型
+     */
     private String accountType;
-    //账户级别
+    /**
+     * 账户级别
+     */
     private String accountLevel;
-    //微信
+    /**
+     * 微信
+     */
     private String weixin;
-    //微博
+    /**
+     * 微博
+     */
     private String weibo;
-    //qq
+    /**
+     * qq
+     */
     private String qq;    
     
-    //以下字段单点登录服务端无法获取，需由各客户端通过查询业务获取，
-    //行业类型（登录后各客户端查询业务表得出）
+    /**
+     * 以下字段单点登录服务端无法获取，需由各客户端通过查询业务获取，
+     */
+    /**
+     * 行业类型（登录后各客户端查询业务表得出）
+     */
     private String industryCode;
-    //行业名称（登录后各客户端查询业务表得出）
+    /**
+     * 行业名称（登录后各客户端查询业务表得出）
+     */
     private String industryName;
-    //租户名称（登录后各客户端查询业务表得出）
+    /**
+     * 租户名称（登录后各客户端查询业务表得出）
+     */
     private String tenantName;
     
     

@@ -27,6 +27,13 @@ import org.jasig.cas.client.util.CommonUtils;
 import org.jasig.cas.client.util.ReflectUtils;
 import org.jasig.cas.client.validation.Assertion;
 
+/**
+ * 客户端认证过滤器
+ * Date: 2017年2月9日 <br>
+ * Copyright (c) 2017 asiainfo.com <br>
+ * 
+ * @author
+ */
 public class CustomAuthenticationFilter extends AbstractCasFilter {
 	
 	/**
@@ -67,6 +74,9 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
         PATTERN_MATCHER_TYPES.put("EXACT", ExactUrlPatternMatcherStrategy.class);
     }
     
+    /**
+     * 初始化
+     */
     protected void initInternal(final FilterConfig filterConfig) throws ServletException {
         if (!isIgnoreInitConfiguration()) {
             super.initInternal(filterConfig);
@@ -126,11 +136,17 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
         }
     }
 
+    /**
+     * 初始化
+     */
     public void init() {
         super.init();
         CommonUtils.assertNotNull(this.casServerLoginUrl, "casServerLoginUrl cannot be null.");
     }
     
+    /**
+     * doFilter接口
+     */
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
 			FilterChain filterChain) throws IOException, ServletException {
@@ -222,7 +238,12 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
     public final void setGatewayStorage(final GatewayResolver gatewayStorage) {
         this.gatewayStorage = gatewayStorage;
     }
-        
+    /**
+     * 判断请求url是否包含
+     * @param request
+     * @return
+     * @author
+     */
     private boolean isRequestUrlExcluded(final HttpServletRequest request) {
         if (this.ignoreUrlPatternMatcherStrategyClass == null) {
             return false;

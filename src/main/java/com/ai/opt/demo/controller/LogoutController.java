@@ -16,9 +16,22 @@ import com.ai.opt.sso.client.filter.SSOClientUser;
 import com.ai.opt.sso.client.filter.SSOClientUtil;
 
 
+/**
+ * 登出controller
+ * Date: 2017年2月9日 <br>
+ * Copyright (c) 2017 asiainfo.com <br>
+ * 
+ * @author
+ */
 @Controller
 public class LogoutController {
 	private static final Logger LOG = LoggerFactory.getLogger(LogoutController.class);
+	/**
+	 * 单点登出
+	 * @param request
+	 * @param response
+	 * @author
+	 */
 	@RequestMapping("/ssologout")
 	public void logout(HttpServletRequest request,HttpServletResponse response){
 		HttpSession session = request.getSession();

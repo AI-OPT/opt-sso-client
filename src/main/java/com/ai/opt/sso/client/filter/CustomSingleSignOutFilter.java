@@ -40,6 +40,9 @@ public final class CustomSingleSignOutFilter extends AbstractConfigurationFilter
 
     private AtomicBoolean handlerInitialized = new AtomicBoolean(false);
 
+    /**
+     * 初始化
+     */
     public void init(final FilterConfig filterConfig) throws ServletException {
         if (!isIgnoreInitConfiguration()) {
             HANDLER.setArtifactParameterName(getPropertyFromInitParams(filterConfig, "artifactParameterName",
@@ -84,6 +87,9 @@ public final class CustomSingleSignOutFilter extends AbstractConfigurationFilter
         HANDLER.setSessionMappingStorage(storage);
     }
 
+    /**
+     * doFilter接口
+     */
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse,
             final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;

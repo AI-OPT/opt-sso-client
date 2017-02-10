@@ -13,6 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * FilterConfig
+ * Date: 2017年2月9日 <br>
+ * Copyright (c) 2017 asiainfo.com <br>
+ * 
+ * @author
+ */
 public class WrappedFilterConfig implements FilterConfig {
 	private static final Logger LOG = LoggerFactory.getLogger(WrappedFilterConfig.class);
 	private ThreadLocal<Map<String, String>> params=new ThreadLocal<Map<String, String>>();
@@ -39,6 +46,9 @@ public class WrappedFilterConfig implements FilterConfig {
 		return filterConfig.getFilterName();
 	}
 
+	/**
+	 * 获取初始化参数
+	 */
 	@Override
 	public String getInitParameter(String key) {
 		String value = filterConfig.getInitParameter(key);
@@ -48,6 +58,9 @@ public class WrappedFilterConfig implements FilterConfig {
 		return params.get().get(key);
 	}
 
+	/**
+	 * 获取初始化枚举
+	 */
 	@Override
 	public Enumeration<String> getInitParameterNames() {
 		final Iterator<String> iterator = params.get().keySet().iterator();
@@ -65,11 +78,19 @@ public class WrappedFilterConfig implements FilterConfig {
 		};
 	}
 
+	/**
+	 * 获取上下文
+	 */
 	@Override
 	public ServletContext getServletContext() {
 		return filterConfig.getServletContext();
 	}
 	
+	/**
+	 * 初始化参数
+	 * @param httpRequest
+	 * @author
+	 */
 	private void initParams(HttpServletRequest httpRequest){
 		String serverName=httpRequest.getServerName();
 		boolean innerFlag=IPHelper.isInnerIP(serverName,SSOClientUtil.getInnerDomains());
@@ -95,6 +116,11 @@ public class WrappedFilterConfig implements FilterConfig {
 		}
 	}
 	
+	/**
+	 * 初始化参数
+	 * 
+	 * @author
+	 */
 	private void initParams(){
 		//jvm里如果有map，则直接返回
 		if(!params.get().isEmpty()){
@@ -127,6 +153,11 @@ public class WrappedFilterConfig implements FilterConfig {
 		}//end else
 	}
 	
+	/**
+	 * 打印参数
+	 * 
+	 * @author
+	 */
 	private void printParams(){
 		Iterator iter = this.params.get().entrySet().iterator();
 			while (iter.hasNext()) {

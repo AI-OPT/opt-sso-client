@@ -87,6 +87,13 @@ public class IPHelper {
 		return isInnerIP(ipAddress,null);
 	}
 	
+	/**
+	 * 判断ip是否被包含
+	 * @param ipAddress
+	 * @param innerDomains
+	 * @return
+	 * @author
+	 */
 	public static boolean isInnerIP(String ipAddress,String[] innerDomains) {
 		boolean isInnerIp = false;
 		boolean isIPFlag = isIP(ipAddress);
@@ -120,6 +127,12 @@ public class IPHelper {
 		return isInnerIp;
 	}
 
+	/**
+	 * 获取ip数
+	 * @param ipAddress
+	 * @return
+	 * @author
+	 */
 	private static long getIpNum(String ipAddress) {
 		String[] ip = ipAddress.split("\\.");
 		long a = Integer.parseInt(ip[0]);
@@ -131,6 +144,14 @@ public class IPHelper {
 		return ipNum;
 	}
 
+	/**
+	 * 判断ip是否在范围
+	 * @param userIp
+	 * @param begin
+	 * @param end
+	 * @return
+	 * @author
+	 */
 	private static boolean isInner(long userIp, long begin, long end) {
 		return (userIp >= begin) && (userIp <= end);
 	}

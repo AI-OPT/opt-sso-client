@@ -27,6 +27,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * FilterChainProxy
+ * Date: 2017年2月9日 <br>
+ * Copyright (c) 2017 asiainfo.com <br>
+ * 
+ * @author
+ */
 public class FilterChainProxy extends AbstractConfigurationFilter {
 
 	Logger LOG = LoggerFactory.getLogger(getClass());
@@ -185,6 +192,9 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 		}
 	}  
 
+	/**
+	 * 销毁
+	 */
 	@Override
 	public void destroy() {
 		if(filterlistMap!=null&&filterlistMap.get()!=null){
@@ -201,6 +211,13 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 		}
 	}
 	
+	/**
+	 * VirtualFilterChain
+	 * Date: 2017年2月9日 <br>
+	 * Copyright (c) 2017 asiainfo.com <br>
+	 * 
+	 * @author
+	 */
 	private class VirtualFilterChain implements FilterChain {
 		private FilterInvocation fi;
 		private Filter[] additionalFilters;
@@ -235,6 +252,12 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 		}
 	}
 
+	/**
+	 * 判断是否忽略
+	 * @param requestUrl
+	 * @return
+	 * @author
+	 */
 	private  boolean isIgnored(String requestUrl) {
 		if (ignore_resources == null){
 			return false;

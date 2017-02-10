@@ -23,10 +23,20 @@ import com.ai.opt.sso.client.filter.SSOClientUser;
 import com.alibaba.fastjson.JSON;
 
 
+/**
+ * 登陆用户信息过滤器
+ * Date: 2017年2月9日 <br>
+ * Copyright (c) 2017 asiainfo.com <br>
+ * 
+ * @author
+ */
 public class AssembleUserInfoFilter implements Filter {
     private String[] ignor_suffix = {};
     private static final Logger LOG = LoggerFactory.getLogger(AssembleUserInfoFilter.class);
 
+    /**
+     * 初始化
+     */
     public void init(FilterConfig filterConfig) throws ServletException {
         String ignore_res = filterConfig.getInitParameter("ignore_suffix");
         if (!"".equals(ignore_res)) {
@@ -34,6 +44,9 @@ public class AssembleUserInfoFilter implements Filter {
         }
     }
 
+    /**
+     * doFilter接口
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
@@ -98,6 +111,12 @@ public class AssembleUserInfoFilter implements Filter {
         return user;
     }
 
+    /**
+     * 判断白名单
+     * @param req
+     * @return
+     * @author
+     */
     private boolean shouldFilter(HttpServletRequest req) {
         if (ignor_suffix != null && ignor_suffix.length > 0) {
             String uri = req.getRequestURI().toLowerCase();

@@ -12,12 +12,18 @@ import java.io.Serializable;
 public class SLPClientUser implements Serializable {
     private static final long serialVersionUID = -8147635836938729264L;
 
-    //登录名称
+    /**
+     * 登录名称
+     */
     private String username;
     
-    //租户id
+    /**
+     * 租户id
+     */
     private String tenantId;
-    //账号ID
+    /**
+     * 账号ID
+     */
     private String userId;
     /**用户类型:
      * 10：个人
@@ -26,13 +32,21 @@ public class SLPClientUser implements Serializable {
 	 * 13：供货商
      */
     private String userType;
-    //用户flag
+    /**
+     * 用户flag
+     */
     private String userFlag;
-    //账号名称
+    /**
+     * 账号名称
+     */
     private String userLoginName;
-    //昵称
+    /**
+     * 昵称
+     */
     private String userNickname;
-    //昵称缩写
+    /**
+     * 昵称缩写
+     */
     private String shortUserNickName;
     
     
@@ -43,9 +57,13 @@ public class SLPClientUser implements Serializable {
     private String safetyLevel;
 
     private String pwdSafetyLevel;
-    //手机号码
+    /**
+     * 手机号码
+     */
     private String userMp;
-    //邮件
+    /**
+     * 邮件
+     */
     private String userEmail;
 
     private String emailValidateFlag;
@@ -62,14 +80,24 @@ public class SLPClientUser implements Serializable {
 
     private String creditFlag;
 
-    //以下字段单点登录服务端无法获取，需由各客户端通过查询业务获取，
-    //行业类型（登录后各客户端查询业务表得出）
+    /**
+     * 以下字段单点登录服务端无法获取，需由各客户端通过查询业务获取，
+     */
+    /**
+     * 行业类型（登录后各客户端查询业务表得出）
+     */
     private String industryCode;
-    //行业名称（登录后各客户端查询业务表得出）
+    /**
+     * 行业名称（登录后各客户端查询业务表得出）
+     */
     private String industryName;
-    //租户名称（登录后各客户端查询业务表得出）
+    /**
+     * 租户名称（登录后各客户端查询业务表得出）
+     */
     private String tenantName;
-    //账管账户ID
+    /**
+     * 账管账户ID
+     */
     private long acctId;
     
 	public String getUsername() {
