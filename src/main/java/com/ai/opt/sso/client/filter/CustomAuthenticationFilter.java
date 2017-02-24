@@ -43,6 +43,10 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
 	private String logOutBackUrl;
 	
     private String casServerLoginUrl;
+    /*
+     本系统标识，用于单点登录服务端识别系统。
+     */
+    private String systemId;
     
     private boolean renew = false;
 
@@ -87,6 +91,9 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
             logger.trace("Loaded localeParamName parameter: {}", this.localeParamName);
             setLocaleCookieName(getPropertyFromInitParams(filterConfig,SSOClientConstants.LOCALE_COOKIE_NAME,null));
             logger.trace("Loaded localeCookieName parameter: {}", this.localeCookieName);
+
+            setSystemId(getPropertyFromInitParams(filterConfig,SSOClientConstants.SYSTEM_ID,null));
+            logger.trace("Loaded localeParamName parameter: {}", this.systemId);
             
             final String ignorePattern = getPropertyFromInitParams(filterConfig, "ignorePattern", null);
             logger.trace("Loaded ignorePattern parameter: {}", ignorePattern);
@@ -203,6 +210,9 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
 		if(locale!=null && locale.trim().length()>0){
 		    buffer.append("&locale=").append(locale);
 		}
+		if (this.systemId!=null && this.systemId.trim().length()>0){
+		    buffer.append("&systemId=").append(this.systemId);
+        }
 		
 		return buffer.toString();
 	}
@@ -296,6 +306,12 @@ public class CustomAuthenticationFilter extends AbstractCasFilter {
     public void setLocaleCookieName(String localeCookieName) {
         this.localeCookieName = localeCookieName;
     }
-	
-	
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 }

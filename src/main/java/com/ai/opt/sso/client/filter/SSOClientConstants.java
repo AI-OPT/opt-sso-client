@@ -15,5 +15,6 @@ public final class SSOClientConstants {
 	public static final String USER_SESSION_KEY = "user_session_key";
 	public static final String LOCALE_PARAM_NAME="localeParamName";
     public static final String LOCALE_COOKIE_NAME="localeCookieName";
+    public static final String SYSTEM_ID = "systemId";
 	
 }
