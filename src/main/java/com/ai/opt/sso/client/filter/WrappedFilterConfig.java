@@ -34,7 +34,7 @@ public class WrappedFilterConfig implements FilterConfig {
 	/**
 	 * 根据内外网自动调整IP参数
 	 * @param currentFilterConfig
-	 * @param httpRequest
+	 * @param params
 	 */
 	public WrappedFilterConfig(FilterConfig currentFilterConfig, ThreadLocal<Map<String, String>> params) {
 		this.filterConfig = currentFilterConfig;
@@ -55,7 +55,7 @@ public class WrappedFilterConfig implements FilterConfig {
 		if(value!=null){
 			return value;
 		}
-		return params.get().get(key);
+		return StringUtils.isBlank(System.getenv().get(key))?params.get().get(key):System.getenv().get(key);
 	}
 
 	/**
