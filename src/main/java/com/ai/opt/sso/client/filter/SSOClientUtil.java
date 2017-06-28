@@ -254,6 +254,10 @@ public final class SSOClientUtil {
 		}
     }
 
+    public static String getSystemId(){
+        return prop.getProperty(SSOClientConstants.SYSTEM_ID,"").trim();
+    }
+
     public static String getProperty(String key) {
         return prop.getProperty(key, "").trim();
     }
