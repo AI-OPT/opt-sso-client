@@ -183,7 +183,23 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 		}else{
 			chain.doFilter(req, response);
 		}
+		
+		//释放线程变量
+		releaseThreadLocalVars();
 	}  
+	
+	public void releaseThreadLocalVars(){
+		// clean map
+		if (null != filterlistMap.get()) {
+			filterlistMap.get().clear();
+		}
+		filterlistMap.set(null);
+	
+		if (null != threadParams.get()) {
+			threadParams.get().clear();
+		}
+		threadParams.set(null);
+	}
 
 	@Override
 	public void destroy() {
