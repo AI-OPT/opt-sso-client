@@ -193,12 +193,12 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 		if (null != filterlistMap.get()) {
 			filterlistMap.get().clear();
 		}
-		filterlistMap.remove();
+		filterlistMap.set(null);
 	
 		if (null != threadParams.get()) {
 			threadParams.get().clear();
 		}
-		threadParams.remove();
+		threadParams.set(null);
 	}
 
 	@Override
