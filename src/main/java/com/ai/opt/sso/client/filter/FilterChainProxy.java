@@ -113,79 +113,83 @@ public class FilterChainProxy extends AbstractConfigurationFilter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest) request;
-		String currentResource =  req.getRequestURI();
-		/////初始化过滤器链的参数--- 开始//////
-		filterlistMap = ObtainAllDefinedFilters();
-		Map<String, String> currParams=new ConcurrentHashMap<String, String>();
-		HttpServletRequest httpRequest=(HttpServletRequest)request;
-		String serverName=httpRequest.getServerName();
-		boolean innerFlag=IPHelper.isInnerIP(serverName,SSOClientUtil.getInnerDomains());
-		//若是内网访问，则单点登录走内网
-		//深度拷贝params到currParms
-		Iterator iter = params.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry<String, String> entry = (Map.Entry<String, String>) iter.next();
-			String key = entry.getKey();
-			String val = entry.getValue();
-			currParams.put(key, val);
-			
-		}
-		
-		if(innerFlag){
+		try{
+			HttpServletRequest req = (HttpServletRequest) request;
+			String currentResource =  req.getRequestURI();
+			/////初始化过滤器链的参数--- 开始//////
+			filterlistMap = ObtainAllDefinedFilters();
+			Map<String, String> currParams=new ConcurrentHashMap<String, String>();
+			HttpServletRequest httpRequest=(HttpServletRequest)request;
+			String serverName=httpRequest.getServerName();
+			boolean innerFlag=IPHelper.isInnerIP(serverName,SSOClientUtil.getInnerDomains());
 			//若是内网访问，则单点登录走内网
-			Iterator iterInner = currParams.entrySet().iterator();
-				while (iterInner.hasNext()) {
-					Map.Entry<String, String> entry = (Map.Entry<String, String>) iterInner.next();
-					String key = entry.getKey();
-					if(null!=key&&!"".equals(key)&&key.endsWith("_Inner")){
-						String val = entry.getValue();
-						String keyNormal=key.replace("_Inner", "");
-						currParams.put(keyNormal, val);
-					}	
-					
-				}
-		}
-		
-		threadParams.set(currParams);
-		
-		
-		WrappedFilterConfig wrappedFilterConfig = new WrappedFilterConfig(currentFilterConfig,threadParams);
-		
-		for (List<Filter> list : filterlistMap.get().values()) {
-			for(Filter filter : list){
-				if(filter!=null){
-					if(LOG.isDebugEnabled()){
-						 LOG.debug("Initializing Filter defined in ApplicationContext: '" + filter.toString() + "'");
+			//深度拷贝params到currParms
+			Iterator iter = params.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry<String, String> entry = (Map.Entry<String, String>) iter.next();
+				String key = entry.getKey();
+				String val = entry.getValue();
+				currParams.put(key, val);
+				
+			}
+			
+			if(innerFlag){
+				//若是内网访问，则单点登录走内网
+				Iterator iterInner = currParams.entrySet().iterator();
+					while (iterInner.hasNext()) {
+						Map.Entry<String, String> entry = (Map.Entry<String, String>) iterInner.next();
+						String key = entry.getKey();
+						if(null!=key&&!"".equals(key)&&key.endsWith("_Inner")){
+							String val = entry.getValue();
+							String keyNormal=key.replace("_Inner", "");
+							currParams.put(keyNormal, val);
+						}	
+						
 					}
-					filter.init(wrappedFilterConfig);
+			}
+			
+			threadParams.set(currParams);
+			
+			
+			WrappedFilterConfig wrappedFilterConfig = new WrappedFilterConfig(currentFilterConfig,threadParams);
+			
+			for (List<Filter> list : filterlistMap.get().values()) {
+				for(Filter filter : list){
+					if(filter!=null){
+						if(LOG.isDebugEnabled()){
+							 LOG.debug("Initializing Filter defined in ApplicationContext: '" + filter.toString() + "'");
+						}
+						filter.init(wrappedFilterConfig);
+					}
 				}
 			}
-		}
-		ssofilters = filterlistMap.get().get("sso").toArray(new Filter[0]);
-		
-	    /////初始化过滤器链的参数--- 结束//////
-		
-		
-		FilterInvocation fi = new FilterInvocation(request, response, chain);
-		if (filterlistMap.get().size() == 0) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(fi.getRequestUrl() + " has an empty filter list");
+			ssofilters = filterlistMap.get().get("sso").toArray(new Filter[0]);
+			
+		    /////初始化过滤器链的参数--- 结束//////
+			
+			
+			FilterInvocation fi = new FilterInvocation(request, response, chain);
+			if (filterlistMap.get().size() == 0) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug(fi.getRequestUrl() + " has an empty filter list");
+				}
+				chain.doFilter(request, response);
+				return;
 			}
-			chain.doFilter(request, response);
-			return;
+			
+			
+			if(currentResource!=null&&!isIgnored(currentResource.toLowerCase())){
+				VirtualFilterChain virtualFilterChain = new VirtualFilterChain(fi,this.ssofilters);
+				virtualFilterChain.doFilter(fi.getRequest(), fi.getResponse());
+			}else{
+				chain.doFilter(req, response);
+			}
+		}
+		finally{
+			//释放线程变量
+			releaseThreadLocalVars();
 		}
 		
-		
-		if(currentResource!=null&&!isIgnored(currentResource.toLowerCase())){
-			VirtualFilterChain virtualFilterChain = new VirtualFilterChain(fi,this.ssofilters);
-			virtualFilterChain.doFilter(fi.getRequest(), fi.getResponse());
-		}else{
-			chain.doFilter(req, response);
-		}
-		
-		//释放线程变量
-		releaseThreadLocalVars();
 	}  
 	
 	public void releaseThreadLocalVars(){
