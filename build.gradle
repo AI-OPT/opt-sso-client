@@ -12,7 +12,7 @@ repositories {
 }
 ext {
 	appName = "opt-sso-client"
-	moduleVersion = "1.0.4-SNAPSHOT"
+	moduleVersion = "1.0.5-SNAPSHOT"
 	builtBy = "gradle 2.4"
 	publishUserName = "runnerdev"
 	publishUserPassword = "runnerdev"
